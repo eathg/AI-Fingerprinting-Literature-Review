@@ -21,6 +21,8 @@ This document describes the workflow for Phase 1 contributions.
 2. Fill in a row in [`data/literature-tracker.csv`](data/literature-tracker.csv) for each paper.
 3. Use [`templates/paper-entry.md`](templates/paper-entry.md) as your field-by-field reference.
 
+> **Scope reminder:** This project focuses on **agent behavioral trajectory fingerprinting** — identifying agents by their action sequences and interaction dynamics. If a paper only analyzes text outputs or HTTP headers, note it briefly as B5 (background) or skip it.
+
 ---
 
 ## Step 3: Submit Your Work
@@ -68,7 +70,7 @@ The `data/literature-tracker.csv` is the core deliverable. Follow these rules to
    "Chen, J., Smith, A., et al."
    ```
 3. **No line breaks within a field.** Keep each row on a single line.
-4. **Use the category codes** A, B, C, D, or E (see [`docs/TASK.md`](docs/TASK.md)). You may list multiple categories separated by `/` (e.g., `A/B`).
+4. **Use the sub-category codes** B1, B2, B3, B4, or B5 (see [`docs/TASK.md`](docs/TASK.md)). You may list multiple sub-categories separated by `/` (e.g., `B1/B2`).
 5. **Replication suitability** must be one of: `✅ Suitable`, `⚠️ Conditional`, or `❌ High risk`.
 
 ### Tip: Use Google Sheets
@@ -83,7 +85,9 @@ Before opening your PR, verify:
 
 - [ ] All assigned papers have a complete row in `literature-tracker.csv`
 - [ ] Every field is filled — no empty cells (if information is unavailable, write "Not described in paper")
-- [ ] "Fingerprinting target" and "Input signal" are specific (not vague)
+- [ ] "Fingerprinting target," "Trajectory type," and "Input signal (features)" are specific (not vague)
+- [ ] "Input signal (features)" lists concrete features, not just "behavioral features"
 - [ ] "Replication suitability" includes a one-sentence reason
+- [ ] Papers that conflate traditional bots with LLM agents are noted
 - [ ] CSV is valid (opens correctly, no broken rows)
 - [ ] No merge conflicts with `main`

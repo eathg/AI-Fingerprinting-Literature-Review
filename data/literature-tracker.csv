@@ -1,2 +1,2 @@
-paper_title,year,authors_institution,category,fingerprinting_target,input_signal,method,dataset_environment,evaluation_metric,main_finding,limitations,replication_suitability
-,,,,A/B/C/D/E,,,,,,,✅/⚠️/❌
+paper_title,year,authors_institution,sub_category,fingerprinting_target,trajectory_type,input_signal_features,method,dataset_environment,evaluation_metric,main_finding,limitations,replication_suitability
+,,,,B1/B2/B3/B4/B5,,,,,,,✅/⚠️/❌

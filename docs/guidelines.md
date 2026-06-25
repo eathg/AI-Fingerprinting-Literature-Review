@@ -2,7 +2,19 @@
 
 ## Your Role
 
-You are a **research assistant** on a literature mapping project. Your primary contribution at this stage is **accurate documentation**, not critical innovation. This document explains exactly how to approach each paper.
+You are a **research assistant** on a literature mapping project focused on **agent behavioral trajectory fingerprinting**. Your primary contribution at this stage is **accurate documentation**, not critical innovation. This document explains exactly how to approach each paper.
+
+---
+
+## The Core Question We Care About
+
+Every paper in this project should relate — directly or tangentially — to this question:
+
+> **Can we identify, classify, or attribute an AI agent by analyzing the sequence of actions it takes during a task?**
+
+The "actions" are behavioral: clicks, scrolls, keystrokes, page navigations, timing patterns, mouse movements, API calls. Not text content. Not browser headers. **What the agent does, step by step.**
+
+When reading a paper, always ask yourself: *"Does this paper use behavioral trajectory data as a signal?"* If yes, document it carefully. If the paper only uses text outputs or HTTP headers, it's outside our scope — note it briefly as B5 (background) if it provides useful methods, or skip it.
 
 ---
 
@@ -14,60 +26,92 @@ You do **not** need to understand every equation or implementation detail. Focus
 
 - Read the **title**, **abstract**, and **section headings**
 - Look at **Table 1** or the main results table
-- Check: is this paper about fingerprinting/identifying AI agents or models? If not, note it as Category E (related work)
+- Check: does this paper analyze **behavioral/interaction traces**? Or does it only use text, HTTP headers, or static browser attributes?
+  - If it uses behavioral traces → assign sub-category B1–B4
+  - If it's about traditional bots, browser fingerprinting, or behavioral biometrics → assign B5 (background)
+  - If it's purely about text outputs → note as out-of-scope
 
 ### Step 2 — Extract Key Fields (15–20 minutes)
 
 Fill in the standard template. Focus on these questions in order:
 
-1. **What is being fingerprinted?** (model identity? agent behavior? human-vs-agent? provenance?)
-2. **What data/signal does the method use?** (text? clicks? timing? browser attributes?)
-3. **How was the data collected?** (This is critical — if you can't tell, flag it)
-4. **What metric do they report?** (accuracy? F1? AUC?)
-5. **Is the setup reproducible?** Could you re-run this experiment given the information in the paper?
+1. **What behavioral trace does the method use?** (web clicks? mouse movement? timing? navigation paths? API calls?)
+2. **What specific features are extracted from the trace?** (this is the most important part — see below)
+3. **What is being identified?** (which agent framework? human-vs-agent? task strategy? agent version?)
+4. **How was the trace data collected?** (browser extension? instrumented proxy? lab study? existing dataset?)
+5. **What metric do they report?** (accuracy? F1? AUC? TPR@FPR?)
+6. **Is the setup reproducible?** Could we re-collect similar traces and re-implement the method?
 
 ### Step 3 — Assess Replication Risk (5 minutes)
 
-Apply the checklist from [`TASK.md` §4](TASK.md#4-replication-risk-assessment-guide).
+Apply the checklist from [`TASK.md` §5](TASK.md#5-replication-risk-assessment-guide).
+
+---
+
+## The Most Important Field: "Input Signal (Features)"
+
+This field deserves the most care. It determines what we can actually experiment with later. Record the **specific, concrete features** extracted from the behavioral trace — not vague abstractions.
+
+### ❌ Bad (too vague)
+
+- "Behavioral data"
+- "Interaction features"
+- "Timing information"
+- "Web browsing patterns"
+
+### ✅ Good (specific and granular)
+
+- "Inter-action pause durations (ms), binned into 10ms intervals"
+- "Click-target element types (button, link, input, div) as a categorical sequence"
+- "Scroll depth per page (max pixel offset), normalized by page height"
+- "Mouse (x,y) coordinates sampled at 60Hz, transformed to velocity and acceleration"
+- "Page-transition graph edges (URL→URL), encoded as adjacency matrix"
+- "Action-sequence 3-grams over the action vocabulary {click, scroll, type, navigate, wait}"
+- "API call frequency (calls/minute) and argument length distribution"
+
+If the paper lists features in a table, copy the key ones. If features are described in prose, extract them and list them. If the paper says "behavioral features" without specifying, note that — and mark replication risk higher.
 
 ---
 
 ## Common Pitfalls to Avoid
 
-### 1. "High accuracy" does not mean "good paper"
+### 1. Confusing "agent" with "traditional bot"
+
+Many bot detection papers use "bot" to mean scrapers, crawlers, and scripts — not modern LLM-driven agents. Pay attention:
+- If the paper's "bots" are Selenium/Playwright scripts or HTTP crawlers → B5 (background), not B2
+- If the paper specifically studies LLM agent frameworks (Browser-Use, Skyvern, Claude Computer-Use, etc.) → B1 or B2
+- If unclear, note it in limitations: *"Paper does not distinguish between traditional bots and LLM-driven agents"*
+
+### 2. Missing how traces were collected
+
+This is critical for replication. Look for:
+- Was a browser extension used? A proxy? An instrumented browser (Playwright, Puppeteer)?
+- Were human traces collected in a lab? Via crowdsourcing? From production logs?
+- Were agent traces generated by the authors, or borrowed from existing datasets?
+- **If you can't find this information, flag it.** Trace collection method is a replication prerequisite.
+
+### 3. "High accuracy" does not mean "good paper"
 
 A paper reporting 99% accuracy is **not automatically** trustworthy. Ask:
-- How was the test set constructed? Was it separate from training?
+- How were train/test split? Were sessions from the same user/agent in both?
 - Is there a realistic adversary, or is the setting too easy?
-- Could the model be memorizing rather than generalizing?
+- Could the model be memorizing website-specific patterns rather than agent-specific patterns?
+- Is there cross-website or cross-task generalization testing?
 
 If the answer is unclear, mark as **❌ High risk**.
 
-### 2. Vague "Input signal" entries
+### 4. Vague "Trajectory type" entries
 
-❌ Bad: "Behavioral data"
-✅ Good: "Mouse movement trajectories (x,y coordinates at 60Hz) and click timestamps"
+❌ Bad: "Web data"
+✅ Good: "Web interaction traces: DOM-level click events + page navigation sequence + inter-action timestamps"
 
-❌ Bad: "Text features"
-✅ Good: "Token-level log-probabilities from the target model, averaged over 5 probe queries"
+### 5. Copying the abstract for "Main finding"
 
-Be specific about **what raw data** the method actually consumes.
+Do not paste the abstract. Write **your own** 1–2 sentence summary. Example:
 
-### 3. Copying the abstract for "Main finding"
+❌ Bad (abstract copy): "We propose a novel framework for agent identification leveraging behavioral dynamics that achieves state-of-the-art results..."
 
-Do not paste the abstract. Write **your own** 1–2 sentence summary of the key result. Example:
-
-❌ Bad (abstract copy): "We propose a novel framework for agent identification that achieves state-of-the-art results across multiple benchmarks..."
-
-✅ Good (your summary): "A random forest classifier trained on click-sequence features (clicks/min, scroll distance, inter-action pause) distinguishes 4 browser-automation agents with 87% F1 on a self-collected dataset of 2,000 sessions."
-
-### 4. Missing the "Limitations" field
-
-Every paper has limitations. If the paper's authors don't state them clearly, identify them yourself:
-- Small dataset?
-- Only tested on one model/agent?
-- No comparison to baselines?
-- Evaluation metric not standard?
+✅ Good (your summary): "A 1D-CNN trained on click+scroll action sequences (200 steps, padded) classifies 3 agent frameworks + humans with 84% accuracy. Humans are easily separated (F1=0.97) but Browser-Use and custom Playwright agents are frequently confused (F1=0.71)."
 
 ---
 
@@ -76,25 +120,27 @@ Every paper has limitations. If the paper's authors don't state them clearly, id
 | Field | Expected effort |
 |-------|----------------|
 | Paper title, year, authors | Copy exactly — 1 minute |
-| Category | Read abstract + intro, decide — 2 minutes |
+| Sub-category | Read abstract + intro, decide B1–B5 — 2 minutes |
 | Fingerprinting target | 1–2 sentences — 2 minutes |
-| Input signal | **Be specific** — 3 minutes (this is the most important field) |
+| Trajectory type | Identify the trace modality — 2 minutes |
+| Input signal (features) | **Be specific and granular** — 4 minutes (most important field) |
 | Method | 1–2 sentences — 3 minutes |
-| Dataset / environment | Look for data section — 3 minutes |
+| Dataset / environment | Look for data collection section — 4 minutes (look for how traces were recorded!) |
 | Evaluation metric | Check results table — 1 minute |
 | Main finding | Write your own summary — 3 minutes |
-| Limitations | Read discussion section + your own observation — 3 minutes |
+| Limitations | Read discussion + your own observation — 3 minutes |
 | Replication suitability | Apply checklist — 2 minutes |
 
-**Total: ~20–25 minutes per paper.** This is a documentation task, not a deep reading task.
+**Total: ~25–30 minutes per paper.** This is a documentation task, not a deep reading task.
 
 ---
 
 ## When You're Unsure
 
-- **Unsure about category?** Read the intro and conclusion. If still unsure, pick the closest fit and note your uncertainty in the "Limitations" field.
-- **Can't find the dataset description?** Mark replication risk as ❌ and note "dataset construction not described."
-- **Don't understand the method?** Write what you *do* understand (e.g., "uses a neural network classifier, architecture details not fully clear") and note it.
-- **Paper is not about fingerprinting at all?** Assign Category E and document it briefly — it may still provide useful signal types or evaluation methods.
+- **Unsure about sub-category?** Read the intro and conclusion. If still unsure, pick the closest fit and note your uncertainty in "Limitations."
+- **Can't find the trace collection method?** Mark replication risk as ❌ and note: "trace collection method not described."
+- **Features are vague ("behavioral features")?** Write what you *can* extract and note: "specific feature list not provided; described only as 'behavioral features'."
+- **Paper is about traditional bots, not AI agents?** Assign B5 and still document it — it may provide useful feature engineering ideas or evaluation baselines.
+- **Paper analyzes text outputs, not behavior?** Note as out-of-scope and skip (or document briefly under B5 if it has relevant methodology).
 
 **When in doubt, document honestly.** Flagging "I couldn't find this information" is more valuable than guessing.

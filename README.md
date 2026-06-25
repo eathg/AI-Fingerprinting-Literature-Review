@@ -1,4 +1,4 @@
-# Agentic AI Fingerprinting — Research Project
+# Agent Behavioral Trajectory Fingerprinting — Research Project
 
 > **Phase 1 (Current):** Literature Mapping & Problem Scoping
 >
@@ -10,9 +10,13 @@
 
 ## Project Overview
 
-This repository hosts a multi-phase research project on **agentic AI fingerprinting** — the problem of identifying, attributing, and distinguishing AI agent systems from their observable behaviors, outputs, and traces.
+This repository hosts a multi-phase research project on **agent behavioral trajectory fingerprinting** — the problem of identifying, classifying, and attributing AI agent systems by analyzing their **observable behavioral traces** during task execution.
 
-The project is structured into sequential phases. Each phase has a clearly defined scope, deliverable, and evaluation checklist.
+An agent's behavioral trajectory is the sequence of actions it takes while completing a task: clicks, scrolls, keystrokes, page navigations, API calls, dwell times, error-recovery patterns, and more. The central question of this project is:
+
+> **Given a behavioral trace from a web interaction or task episode, can we determine which agent system produced it, distinguish it from a human, or attribute it to a specific agent version?**
+
+This is distinct from text-output fingerprinting (which model wrote this text?) or browser fingerprinting (which device/browser is this?). We focus specifically on **what the agent *does*** — its action sequence and interaction dynamics.
 
 | Phase | Title | Status | Deliverable |
 |-------|-------|--------|-------------|
@@ -26,13 +30,13 @@ The project is structured into sequential phases. Each phase has a clearly defin
 
 ### Objective
 
-Read, categorize, and systematically document a set of papers, technical reports, and system documents related to agentic AI fingerprinting. The goal is **not** to produce novel research in this phase — it is to build a **structured knowledge base** that the team will use to design experiments in later phases.
+Read, categorize, and systematically document papers related to **agent behavioral trajectory fingerprinting** and adjacent areas. The goal is **not** to produce novel research in this phase — it is to build a **structured knowledge base** that the team will use to design experiments in later phases.
 
 By the end of Phase 1, the team should be able to answer three questions:
 
-1. **What** can be fingerprinted in the agentic AI space? (model identity, agent framework, human-vs-agent, provenance)
-2. **Which** data or behavioral signals do existing methods use? (text outputs, UI traces, browser attributes, timing)
-3. **Which** directions are suitable for reproducible follow-up experiments?
+1. **What behavioral signals** do existing methods extract from agent traces? (click sequences, timing distributions, navigation graphs, DOM interactions, API call patterns)
+2. **What is being identified** — agent framework, specific agent system, human-vs-agent, or something else?
+3. **Which methods** have the clearest experimental setup and are feasible for our team to replicate?
 
 ### Deliverables
 
@@ -47,7 +51,7 @@ By the end of Phase 1, the team should be able to answer three questions:
 |-----|-----------|
 | Day 1 | Read [`TASK.md`](docs/TASK.md); claim papers via Issues; set up shared sheet |
 | Day 2–4 | Read and document assigned papers using the [entry template](templates/paper-entry.md) |
-| Day 5 | Cross-check categories; flag replication-risk papers; peer review within the team |
+| Day 5 | Cross-check sub-categories; flag replication-risk papers; peer review within the team |
 | Day 6 | Draft the summary memo |
 | Day 7 | Final review, submit PR |
 
@@ -82,7 +86,7 @@ agentic-ai-fingerprinting/
    git clone https://github.com/jzrz-bot/agentic-ai-fingerprinting.git
    ```
 
-2. **Read [`docs/TASK.md`](docs/TASK.md)** in full — it contains the task description, the five-category taxonomy, and the reading template.
+2. **Read [`docs/TASK.md`](docs/TASK.md)** in full — it contains the task description, the sub-category taxonomy, and the reading template.
 
 3. **Read [`CONTRIBUTING.md`](CONTRIBUTING.md)** — it explains how to claim papers and submit your work.
 
