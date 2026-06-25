@@ -1,0 +1,28 @@
+# OS / Editor
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Python (for any analysis scripts)
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+
+# Data files (large datasets should not be committed)
+*.pkl
+*.pkl.gz
+*.parquet
+*.feather
+*.h5
+*.npy
+*.npz
+
+# Keep CSVs and small text files
+!data/*.csv
